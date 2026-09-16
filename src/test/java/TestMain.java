@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
 public class TestMain {
     @Test
     public static boolean isEven(int n) {
@@ -10,5 +9,9 @@ public class TestMain {
             return false;
         }
 
+    }
+    @Test
+    public static String checkAccess(int age) {
+        return (age > 18) ? "Allowed" : "Denied";
     }
 }
