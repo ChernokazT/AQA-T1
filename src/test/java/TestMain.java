@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.Test;
 
 public class TestMain {
-
+    public static void main(String[] args) {
+        blastOff1(5);
+    }
     public static boolean isEven(int n) {
         if (n % 2 == 0){
             return true;
@@ -10,6 +12,7 @@ public class TestMain {
         }
 
     }
+    @Test
 
     public static String checkAccess(int age) {
         if (age > 18){
@@ -48,6 +51,15 @@ public class TestMain {
         return (num + " Поехали!");
 
     }
+    public static String blastOff1(int start) {
+        String conStr = " Поехали!";
+        for (int i = 0; i < start; i++) {
+            result += (start - i);
+        }
+
+        return "";
+    }
+
     public static int sumToN(int n) {
         int sum = 0;
         for (int i = 1; i <= n; i++) {
