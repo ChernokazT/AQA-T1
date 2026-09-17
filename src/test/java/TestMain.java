@@ -8,6 +8,8 @@ public class TestMain {
         String[] test2 = {"ok", "NotBUG", "fine"};
         System.out.println("Тест (Бага нет): " + hasBug(test));
         System.out.println(getEvenInRange1(1, 5));
+        int[] data = {1, 2, 5, 7, 10};
+        System.out.println(findMax(data));
     }
 
     public static boolean isEven(int n) {
@@ -113,7 +115,19 @@ public class TestMain {
 
         return result;
     }
+    public static int findMax(int[] arr) {
+        int maxValue = arr[0];
+        for (int i = 1; i < arr.length; i++ ){
+            if (maxValue < arr[i]) {
+                maxValue = arr[i];
+            }
+        }
+        return maxValue;
+    }
+    public static String[] reverse(String[] arr) {
+        String[] result = new String[arr.length];
 
+    }
 
 
 }
