@@ -1,5 +1,9 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class TestMain {
     public static void main(String[] args) {
         sumToN(5);
@@ -10,6 +14,11 @@ public class TestMain {
         System.out.println(getEvenInRange1(1, 5));
         int[] data = {1, 2, 5, 7, 10};
         System.out.println(findMax(data));
+        System.out.println(blastOff(5));
+        String[] arr = {"One", "Two", "Three"};
+        System.out.println(Arrays.toString(reverse(arr)));
+        List<String> list = new ArrayList<>(List.of("Gleb", "Oleg", "Igor", "Dron"));
+        System.out.println(removeSpecificName(list, "Oleg"));
     }
 
     public static boolean isEven(int n) {
@@ -52,22 +61,14 @@ public class TestMain {
     }
 
     public static String blastOff(int start) {
-        int[] arr = new int[start];
-        String num = null;
-        for (int i = 1; i > 0; i--) {
-            num = String.valueOf(arr[i]);
+        String conStr = " Поехали!";
+        String result = "";
+        for (int i = start; i > 0; i--) {
+            result += i + " ";
         }
-        return num;
 
+        return result + conStr;
     }
-//    public static String blastOff1(int start) {
-//        String conStr = " Поехали!";
-//        for (int i = 0; i < start; i++) {
-//            result += (start - i);
-//        }
-//
-//        return "";
-//    }
 
     public static int sumToN(int n) {
         int sum = 0;
@@ -115,18 +116,38 @@ public class TestMain {
 
         return result;
     }
+
     public static int findMax(int[] arr) {
         int maxValue = arr[0];
-        for (int i = 1; i < arr.length; i++ ){
+        for (int i = 1; i < arr.length; i++) {
             if (maxValue < arr[i]) {
                 maxValue = arr[i];
             }
         }
         return maxValue;
     }
+
     public static String[] reverse(String[] arr) {
         String[] result = new String[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[arr.length - 1 - i];
+        }
+        return result;
+    }
 
+    public static double calcAverage(List<Integer> list) {
+        double totalSum = 0.0;
+        for (double i : list) totalSum = totalSum + i;
+        return totalSum / list.size();
+    }
+
+    public static List<String> removeSpecificName(List<String> list, String nameToRemove) {
+        List<String> array = new ArrayList<>();
+        for (String name : list) {
+            if (!name.equals(nameToRemove)) {
+                array.add(name);
+            }
+        } return array;
     }
 
 
