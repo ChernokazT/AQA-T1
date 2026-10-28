@@ -1,272 +1,193 @@
 package org.example;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@DisplayName("Тесты второй лекции: проверка методов через ассерты")
 public class SecondLectureTest {
 
     private static final Random RANDOM = new Random();
 
+
     @Test
+    @Tag("lecture2")
+    @DisplayName("isEven: случайное число — проверка чётности")
     void testIsEven() {
-        System.out.println("========================Test method start");
-
         int n = RANDOM.nextInt(100) + 1;
         boolean actual = isEven(n);
         boolean expected = (n % 2 == 0);
 
-        System.out.println("isEven(" + n + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual == expected) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "isEven(" + n + ") вернул неверный результат: ожидалось " + expected);
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(10)
+    @Tag("lecture2")
+    @DisplayName("isEven: случайное число — 10 повторов")
     void testIsEvenRepeated() {
-        System.out.println("========================Test method start");
-
         int n = RANDOM.nextInt(100) + 1;
         boolean actual = isEven(n);
         boolean expected = (n % 2 == 0);
 
-        System.out.println("isEven(" + n + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual == expected) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "isEven(" + n + ") вернул неверный результат: ожидалось " + expected);
     }
 
-    @ParameterizedTest(name = "isEven({0})")
+    @ParameterizedTest(name = "isEven({0}) = {1}")
+    @Tag("lecture2")
+    @DisplayName("isEven: проверка на наборе значений")
     @CsvSource({
             "2, true",
             "3, false",
             "100, true",
-            "57, false"
+            "57, false",
+            "0, true",
+            "1, false",
+            "4, true",
+            "999, false",
+            "256, true",
+            "255, false"
     })
     void testIsEvenParameterized(int n, boolean expected) {
-        System.out.println("========================Test method start");
-
         boolean actual = isEven(n);
-        System.out.println("isEven(" + n + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual == expected) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "isEven(" + n + ") вернул неверный результат: ожидалось " + expected);
     }
 
 
     @Test
+    @Tag("lecture2")
+    @DisplayName("checkAccess: случайный возраст — проверка доступа")
     void testCheckAccess() {
-        System.out.println("========================Test method start");
-
         int age = RANDOM.nextInt(100);
         String actual = checkAccess(age);
         String expected = (age >= 18) ? "Access granted" : "Access denied";
 
-        System.out.println("checkAccess(" + age + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual.equals(expected)) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "checkAccess(" + age + ") вернул неверный результат: ожидалось '" + expected + "'");
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(10)
+    @Tag("lecture2")
+    @DisplayName("checkAccess: случайный возраст — 10 повторов")
     void testCheckAccessRepeated() {
-        System.out.println("========================Test method start");
-
         int age = RANDOM.nextInt(100);
         String actual = checkAccess(age);
         String expected = (age >= 18) ? "Access granted" : "Access denied";
 
-        System.out.println("checkAccess(" + age + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual.equals(expected)) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "checkAccess(" + age + ") вернул неверный результат: ожидалось '" + expected + "'");
     }
 
     @ParameterizedTest(name = "checkAccess({0})")
+    @Tag("lecture2")
+    @DisplayName("checkAccess: проверка на границе 18 лет")
     @CsvSource({
             "0, Access denied",
             "17, Access denied",
             "18, Access granted",
-            "99, Access granted"
+            "99, Access granted",
+            "1, Access denied",
+            "10, Access denied",
+            "19, Access granted",
+            "50, Access granted",
+            "80, Access granted",
+            "100, Access granted"
     })
     void testCheckAccessParameterized(int age, String expected) {
-        System.out.println("========================Test method start");
-
         String actual = checkAccess(age);
-        System.out.println("checkAccess(" + age + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual.equals(expected)) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "checkAccess(" + age + ") вернул неверный результат: ожидалось '" + expected + "'");
     }
 
 
     @Test
+    @Tag("lecture2")
+    @DisplayName("getGrade: случайный балл — проверка оценки")
     void testGetGrade() {
-        System.out.println("========================Test method start");
-
         int score = RANDOM.nextInt(101);
         String actual = getGrade(score);
         String expected = referenceGetGrade(score);
 
-        System.out.println("getGrade(" + score + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual.equals(expected)) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "getGrade(" + score + ") вернул неверную оценку: ожидалось '" + expected + "'");
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(10)
+    @Tag("lecture2")
+    @DisplayName("getGrade: случайный балл — 10 повторов")
     void testGetGradeRepeated() {
-        System.out.println("========================Test method start");
-
         int score = RANDOM.nextInt(101);
         String actual = getGrade(score);
         String expected = referenceGetGrade(score);
 
-        System.out.println("getGrade(" + score + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual.equals(expected)) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "getGrade(" + score + ") вернул неверную оценку: ожидалось '" + expected + "'");
     }
 
-    @ParameterizedTest(name = "getGrade({0})")
+    @ParameterizedTest(name = "getGrade({0}) = {1}")
+    @Tag("lecture2")
+    @DisplayName("getGrade: проверка всех диапазонов оценок")
     @CsvSource({
             "100, A",
             "85, B",
             "75, C",
             "65, D",
-            "50, F"
+            "50, F",
+            "90, A",
+            "89, B",
+            "80, B",
+            "79, C",
+            "0, F"
     })
     void testGetGradeParameterized(int score, String expected) {
-        System.out.println("========================Test method start");
-
         String actual = getGrade(score);
-        System.out.println("getGrade(" + score + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual.equals(expected)) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "getGrade(" + score + ") вернул неверную оценку: ожидалось '" + expected + "'");
     }
 
 
     @Test
+    @Tag("lecture3")
+    @DisplayName("max: сравнение двух случайных чисел")
     void testMax() {
-        System.out.println("========================Test method start");
-
         int a = RANDOM.nextInt(100);
         int b = RANDOM.nextInt(100);
         int actual = max(a, b);
         int expected = Math.max(a, b);
 
-        System.out.println("max(" + a + ", " + b + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual == expected) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "max(" + a + ", " + b + ") вернул неверный результат: ожидалось " + expected);
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(10)
+    @Tag("lecture2")
+    @DisplayName("max: сравнение случайных чисел — 10 повторов")
     void testMaxRepeated() {
-        System.out.println("========================Test method start");
-
         int a = RANDOM.nextInt(100);
         int b = RANDOM.nextInt(100);
         int actual = max(a, b);
         int expected = Math.max(a, b);
 
-        System.out.println("max(" + a + ", " + b + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual == expected) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "max(" + a + ", " + b + ") вернул неверный результат: ожидалось " + expected);
     }
 
-    @ParameterizedTest(name = "max({0}, {1})")
+    @ParameterizedTest(name = "max({0}, {1}) = {2}")
+    @Tag("lecture2")
+    @DisplayName("max: проверка на наборе значений, включая границы")
     @CsvSource({
             "3, 7, 7",
             "10, 2, 10",
             "5, 5, 5",
-            "1, 99, 99"
+            "1, 99, 99",
+            "0, 0, 0",
+            "99, 0, 99",
+            "-5, 5, 5",
+            "-10, -3, -3",
+            "100, 100, 100",
+            "7, 3, 7"
     })
     void testMaxParameterized(int a, int b, int expected) {
-        System.out.println("========================Test method start");
-
         int actual = max(a, b);
-        System.out.println("max(" + a + ", " + b + ") = " + actual + ", ожидалось: " + expected);
-
-        if (actual == expected) {
-            System.out.println("TEST PASSED");
-        } else {
-            System.out.println("TEST FAILED");
-        }
-
-        System.out.println("Test method end");
-        System.out.println("========================");
+        assertEquals(expected, actual, "max(" + a + ", " + b + ") вернул неверный результат: ожидалось " + expected);
     }
 
 

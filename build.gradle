@@ -14,14 +14,18 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'negative'
+    }
     testLogging {
         events 'passed', 'failed', 'skipped'
     }
 }
 
 tasks.register('runAllTests', Test) {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'negative'
+    }
     testLogging {
         events 'passed', 'failed', 'skipped'
     }
@@ -30,6 +34,33 @@ tasks.register('runAllTests', Test) {
     }
     doLast {
         println "=== TEST RUN FINISHED ==="
+    }
+}
+
+tasks.register('runTask1Tests', Test) {
+    useJUnitPlatform {
+        includeTags 'task1'
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+    }
+}
+
+tasks.register('runLecture3Tests', Test) {
+    useJUnitPlatform {
+        includeTags 'lecture3'
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+    }
+}
+
+tasks.register('runNegativeTests', Test) {
+    useJUnitPlatform {
+        includeTags 'negative'
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
     }
 }
 
