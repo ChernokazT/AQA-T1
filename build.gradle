@@ -2,18 +2,41 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group = 'com.example'
+version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
 }
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+    }
 }
+
+tasks.register('runAllTests', Test) {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+    }
+    doFirst {
+        println "=== TEST RUN STARTED ==="
+    }
+    doLast {
+        println "=== TEST RUN FINISHED ==="
+    }
+}
+
+tasks.register('afterTestsMessage') {
+    doLast {
+        println "Test run is over"
+    }
+}
+
+afterTestsMessage.dependsOn runAllTests
