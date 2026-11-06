@@ -1,1 +1,23 @@
-Hello world
++========================Test method start
+ checkAccess(4) = Access denied
+"checkAccess(69) = Access granted
+"checkAccess(81) = Access granted
+ checkAccess(2) = Access denied
+"checkAccess(19) = Access granted
+"checkAccess(32) = Access granted
+"checkAccess(35) = Access granted
+"checkAccess(62) = Access granted
+"checkAccess(22) = Access granted
+"checkAccess(53) = Access granted
+"checkAccess(82) = Access granted
+"checkAccess(28) = Access granted
+"checkAccess(38) = Access granted
+"checkAccess(95) = Access granted
+"checkAccess(47) = Access granted
+"checkAccess(20) = Access granted
+"checkAccess(98) = Access granted
+!checkAccess(10) = Access denied
+"checkAccess(90) = Access granted
+"checkAccess(86) = Access granted
+Test method end
+========================

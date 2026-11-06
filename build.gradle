@@ -5,12 +5,23 @@ plugins {
 group = 'com.example'
 version = '1.0-SNAPSHOT'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+
+    testImplementation 'org.assertj:assertj-core:3.25.3'
+
+    implementation("io.rest-assured:rest-assured:6.0.1")
 }
 
 test {
@@ -69,5 +80,14 @@ tasks.register('afterTestsMessage') {
         println "Test run is over"
     }
 }
+
+tasks.register('runApiTests', Test) {
+    useJUnitPlatform()
+    includeTags 'api'
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+    }
+}
+
 
 afterTestsMessage.dependsOn runAllTests

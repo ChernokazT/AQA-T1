@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestOne" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:05:27" hostname="WIN-V8NS5OCLEQP" time="0.068">
+  <properties/>
+  <testcase name="testCheckAccessMultiple()" classname="TestOne" time="0.068"/>
+  <system-out><![CDATA[========================Test method start
+checkAccess(4) = Access denied
+checkAccess(69) = Access granted
+checkAccess(81) = Access granted
+checkAccess(2) = Access denied
+checkAccess(19) = Access granted
+checkAccess(32) = Access granted
+checkAccess(35) = Access granted
+checkAccess(62) = Access granted
+checkAccess(22) = Access granted
+checkAccess(53) = Access granted
+checkAccess(82) = Access granted
+checkAccess(28) = Access granted
+checkAccess(38) = Access granted
+checkAccess(95) = Access granted
+checkAccess(47) = Access granted
+checkAccess(20) = Access granted
+checkAccess(98) = Access granted
+checkAccess(10) = Access denied
+checkAccess(90) = Access granted
+checkAccess(86) = Access granted
+Test method end
+========================
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
