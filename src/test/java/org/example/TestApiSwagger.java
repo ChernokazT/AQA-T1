@@ -1,74 +1,38 @@
 package org.example;
 
-import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.filter.log.LogDetail;
-import io.restassured.http.ContentType;
-import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.basic;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 @Tag("api")
-
-public class TestApiSwagger {
-
-    private static RequestSpecification basicRQ;
-
-    @BeforeAll
-    static void setUp() {
-        RestAssured.baseURI = "http://localhost:8080";
-        RestAssured.authentication = basic("admin", "secret123");
-        basicRQ = new RequestSpecBuilder()
-                .setContentType(ContentType.JSON)
-                .log(LogDetail.ALL)
-                .build();
-    }
-
-    private static long createGoods(String name, double price) {
-        return given()
-                .spec(basicRQ)
-                .body(String.format("{\"name\": \"%s\", \"price\": %.2f}", name, price))
-                .when()
-                .post("/goods/add")
-                .then()
-                .statusCode(200)
-                .extract()
-                .jsonPath()
-                .getLong("id");
-    }
-
+public class TestApiSwagger extends ApiTestSupport {
     @Test
     void requestWithoutAuth_returns401() {
         given()
-                .contentType(ContentType.JSON)
+                .spec(requestSpec)
+                .auth()
+                .none()
+                .body(productBody(uniqueName(), 10.00))
                 .when()
-                .get("/goods/list")
+                .post("/goods/add")
                 .then()
                 .statusCode(401);
     }
 
     @Test
     void addGoods_validBody_returns200() {
-        given()
-                .spec(basicRQ)
-                .body(String.format("{\"name\": \"Товар %d\", \"price\": 99.99}", System.currentTimeMillis()))
-                .when()
-                .post("/goods/add")
-                .then()
-                .statusCode(200)
-                .body(notNullValue());
+        createGoods(uniqueName(), 99.99);
     }
 
     @Test
     void addGoods_emptyName_returns400() {
         given()
-                .spec(basicRQ)
-                .body("{\"name\": \"\", \"price\": 10.0}")
+                .spec(authorizedSpec)
+                .body(productBody("", 10.00))
                 .when()
                 .post("/goods/add")
                 .then()
@@ -77,23 +41,25 @@ public class TestApiSwagger {
 
     @Test
     void getGoodsById_existingId_returns200() {
-        long id = createGoods("Для чтения " + System.currentTimeMillis(), 50.0);
-
+        String name = uniqueName();
+        long id = createGoods(name, 50.00);
         given()
-                .spec(basicRQ)
+                .spec(authorizedSpec)
                 .pathParam("id", id)
                 .when()
                 .get("/goods/{id}")
                 .then()
                 .statusCode(200)
-                .body(notNullValue());
+                .body("name", equalTo(name));
     }
 
     @Test
     void getGoodsById_nonexistentId_returns404() {
+        long id = createGoods(uniqueName(), 10.00);
+        deleteGoods(id);
         given()
-                .spec(basicRQ)
-                .pathParam("id", 999_999_999L)
+                .spec(authorizedSpec)
+                .pathParam("id", id)
                 .when()
                 .get("/goods/{id}")
                 .then()
@@ -102,26 +68,33 @@ public class TestApiSwagger {
 
     @Test
     void patchGoods_existingId_validBody_returns200() {
-        long id = createGoods("До патча " + System.currentTimeMillis(), 10.0);
-
+        long id = createGoods(uniqueName(), 10.00);
+        String name = uniqueName();
         given()
-                .spec(basicRQ)
+                .spec(authorizedSpec)
                 .pathParam("id", id)
-                .body(String.format("{\"name\": \"После патча %d\", \"price\": 149.99}", System.currentTimeMillis()))
+                .body(productBody(name, 149.99))
                 .when()
                 .patch("/goods/{id}")
                 .then()
                 .statusCode(200);
+        given()
+                .spec(authorizedSpec)
+                .pathParam("id", id)
+                .when()
+                .get("/goods/{id}")
+                .then()
+                .statusCode(200)
+                .body("name", equalTo(name));
     }
 
     @Test
     void patchGoods_invalidBody_returns400() {
-        long id = createGoods("Для патча с ошибкой " + System.currentTimeMillis(), 10.0);
-
+        long id = createGoods(uniqueName(), 10.00);
         given()
-                .spec(basicRQ)
+                .spec(authorizedSpec)
                 .pathParam("id", id)
-                .body("{\"name\": \"\", \"price\": -5.0}")
+                .body(productBody("", -5.00))
                 .when()
                 .patch("/goods/{id}")
                 .then()
@@ -130,10 +103,12 @@ public class TestApiSwagger {
 
     @Test
     void patchGoods_nonexistentId_returns404() {
+        long id = createGoods(uniqueName(), 10.00);
+        deleteGoods(id);
         given()
-                .spec(basicRQ)
-                .pathParam("id", 999_999_999L)
-                .body("{\"name\": \"Нет такого\", \"price\": 1.0}")
+                .spec(authorizedSpec)
+                .pathParam("id", id)
+                .body(productBody(uniqueName(), 1.00))
                 .when()
                 .patch("/goods/{id}")
                 .then()
@@ -142,45 +117,53 @@ public class TestApiSwagger {
 
     @Test
     void getList_defaultPagination_returns200() {
+        String name = uniqueName();
+        createGoods(name, 10.00);
         given()
-                .spec(basicRQ)
+                .spec(requestSpec)
+                .auth()
+                .none()
                 .when()
                 .get("/goods/list")
                 .then()
                 .statusCode(200)
-                .body(notNullValue());
+                .body("goods", notNullValue())
+                .body("goods.name", hasItem(name));
     }
 
     @Test
     void getList_customPagination_returns200() {
         given()
-                .spec(basicRQ)
+                .spec(requestSpec)
                 .queryParam("page", 0)
                 .queryParam("size", 5)
                 .when()
                 .get("/goods/list")
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .body("goods.size()", lessThanOrEqualTo(5));
     }
 
     @Test
     void deleteGoods_existingId_returns200() {
-        long id = createGoods("На удаление " + System.currentTimeMillis(), 20.0);
-
+        long id = createGoods(uniqueName(), 20.00);
+        deleteGoods(id);
         given()
-                .spec(basicRQ)
-                .pathParam("id", id)
+                .spec(requestSpec)
                 .when()
-                .delete("/goods/{id}")
+                .get("/goods/list")
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .body("goods", org.hamcrest.Matchers.empty());
     }
 
     @Test
     void deleteGoods_nonexistentId_returns404() {
+        long id = createGoods(uniqueName(), 10.00);
+        deleteGoods(id);
         given()
-                .spec(basicRQ)
-                .pathParam("id", 999_999_999L)
+                .spec(authorizedSpec)
+                .pathParam("id", id)
                 .when()
                 .delete("/goods/{id}")
                 .then()
