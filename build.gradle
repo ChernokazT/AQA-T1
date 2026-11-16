@@ -82,8 +82,9 @@ tasks.register('afterTestsMessage') {
 }
 
 tasks.register('runApiTests', Test) {
-    useJUnitPlatform()
-    includeTags 'api'
+    useJUnitPlatform {
+        includeTags 'api'
+    }
     testLogging {
         events 'passed', 'failed', 'skipped'
     }
